@@ -59,14 +59,14 @@ function yearfrac(startdate::Date, enddate::Date, dc::Type{Actual365})
 end
 
 function yearfrac(startdate::Date, enddate::Date, dc::Type{ActualActual})
-    years = year(startdate):year(enddate)
+    years = year(startdate):year(enddate-Day(1))
     if any(isleapyear.(years))
         if length(years) > 1
             yf = 0.
             s = startdate
             for y in years
-                e = lastdayofyear(s) > enddate ? enddate : lastdayofyear(s)
-                if isleapyear(y)
+                e = lastdayofyear(s) > enddate ? enddate : lastdayofyear(s)+Day(1)
+                if isleapyear(e-Day(1))
                     yf += Dates.value(e-s)/366
                 else
                     yf += Dates.value(e-s)/365
