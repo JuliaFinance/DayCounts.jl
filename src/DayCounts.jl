@@ -5,7 +5,7 @@ module DayCounts
 
 using Dates
 
-export yearfraction, DayCount, Thirty360, ThirtyE360, ThirtyE360ISDA, Actual360, Actual365, ActualActualISDA
+export yearfraction, DayCount, Thirty360, ThirtyE360, ThirtyE360ISDA, Actual360, Actual365Fixed, ActualActualISDA
 
 
 """
@@ -22,6 +22,7 @@ abstract type DayCount end
 
 """
     Actual365Fixed()
+    Actual365F()
 
 "Actual/365 (Fixed)" day count convention.
 
@@ -31,6 +32,7 @@ The actual number of days divided by 365.
  - 2006 ISDA definitions, §4.16 (d)
 """
 struct Actual365Fixed <: DayCount end
+const Actual365F = Actual365Fixed
 function yearfraction(startdate::Date, enddate::Date, ::Actual365Fixed)
     return Dates.value(enddate-startdate)/365
 end
@@ -72,9 +74,9 @@ function yearfraction(startdate::Date, enddate::Date, ::ActualActualISDA)
         return Dates.value(enddate - startdate) / daysinyear(startdate)
     else
         d1 = daysinyear(startyear)
-        n1 = (d1 - dayofyear(startdate) + 1) / d1
+        n1 = d1 - dayofyear(startdate) + 1
         d2 = daysinyear(endyear)
-        n2 = (dayofyear(enddate) - 1) / d2
+        n2 = dayofyear(enddate) - 1
         return n1/d1 + n2/d2 + (endyear - startyear - 1)
     end
 end
