@@ -81,6 +81,9 @@ function yearfraction(startdate::Date, enddate::Date, ::ActualActualISDA)
     end
 end
 
+# helper function
+thirty360(dy,dm,dd) = (360*dy + 30*dm + dd)/360
+
 """
     Thirty360()
     BondBasis()
@@ -95,13 +98,14 @@ const BondBasis = Thirty360
 function yearfraction(startdate::Date, enddate::Date, ::Thirty360)
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
+    
     d1 = day(startdate)
     d2 = day(enddate)
-    if d1 > 29
+    if d1 >= 30
         d2 = min(d2,30)
+        d1 = 30
     end
-    d1 = min(d1,30)
-    return dy+dm/12+(d2-d1)/360
+    return thirty360(dy,dm,d2-d1)
 end
 
 """
@@ -120,7 +124,7 @@ function yearfraction(startdate::Date, enddate::Date, ::ThirtyE360)
     dm = month(enddate)-month(startdate)
     d1 = min(day(startdate),30)
     d2 = min(day(enddate),30)
-    return dy+dm/12+(d2-d1)/360
+    return thirty360(dy,dm,d2-d1)
 end
 
 """
@@ -142,7 +146,7 @@ function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
     d2 = day(enddate)
     d1 = d1 == lastdayofmonth(Date(y1,2)) ? 30 : min(d1,30)
     d2 = ((d2 == lastdayofmonth(Date(y1,2))) & (enddate != dc.maturity)) ? 30 : min(d1,30)
-    return y2-y1+dm/12+(d2-d1)/360
+    return thirty360(y2-y1,dm,d2-d1)
 end
 
 end # module
