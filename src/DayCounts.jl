@@ -5,19 +5,92 @@ module DayCounts
 
 using Dates
 
-export yearfrac, DayCount, Thirty360, Thirty360E, Thirty360ISDA, Actual360, Actual365, ActualActual
+export yearfraction, DayCount, Thirty360, ThirtyE360, ThirtyE360ISDA, Actual360, Actual365, ActualActualISDA
+
+
+"""
+    yearfraction(startdate::Date, enddate::Date, dc::DayCount)
+
+Compute the fractional number of years between `startdate` and `enddate`, according to the
+day count convention `dc`.
+"""
+function yearfraction
+end
+
 
 abstract type DayCount end
 
-struct Thirty360 <: DayCount end
-struct Thirty360E <: DayCount end
-struct Thirty360ISDA <: DayCount end
-struct Actual360 <: DayCount end
-struct Actual365 <: DayCount end
-struct ActualActual <: DayCount end
+"""
+    Actual365Fixed()
 
-# Bond Basis
-function yearfrac(startdate::Date, enddate::Date, dc::Type{Thirty360})
+"Actual/365 (Fixed)" day count convention.
+
+The actual number of days divided by 365.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (d)
+"""
+struct Actual365Fixed <: DayCount end
+function yearfraction(startdate::Date, enddate::Date, ::Actual365Fixed)
+    return Dates.value(enddate-startdate)/365
+end
+
+"""
+    Actual360()
+
+"Actual/360" day count convention.
+
+Actual number of days divided by 360.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (e)
+
+"""
+struct Actual360 <: DayCount end
+function yearfraction(startdate::Date, enddate::Date, ::Actual360)
+    return Dates.value(enddate-startdate)/360
+end
+
+
+"""
+    ActualActualISDA()
+
+"Actual/Actual (ISDA)" day count convention.
+
+The actual number of days which fall in a standard year divided by 365 plus the actual
+number of days which fall in a leap year divided by 365. The start date is included, and
+the end date is excluded.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (b)
+"""
+struct ActualActualISDA <: DayCount end
+function yearfraction(startdate::Date, enddate::Date, ::ActualActualISDA)
+    startyear = year(startdate)
+    endyear = year(enddate)
+    if startyear == endyear
+        return Dates.value(enddate - startdate) / daysinyear(startdate)
+    else
+        d1 = daysinyear(startyear)
+        n1 = (d1 - dayofyear(startdate) + 1) / d1
+        d2 = daysinyear(endyear)
+        n2 = (dayofyear(enddate) - 1) / d2
+        return n1/d1 + n2/d2 + (endyear - startyear - 1)
+    end
+end
+
+"""
+    Thirty360()
+    BondBasis()
+
+"30/360" or "Bond Basis" day count convention.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (f)
+"""
+struct Thirty360 <: DayCount end
+const BondBasis = Thirty360
+function yearfraction(startdate::Date, enddate::Date, ::Thirty360)
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
     d1 = day(startdate)
@@ -29,8 +102,18 @@ function yearfrac(startdate::Date, enddate::Date, dc::Type{Thirty360})
     return dy+dm/12+(d2-d1)/360
 end
 
-# Eurobond Basis
-function yearfrac(startdate::Date, enddate::Date, dc::Type{Thirty360E})
+"""
+    ThirtyE360()
+    EurobondBasis()
+    
+"30E/360" or "Eurobond Basis" day count convention.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (g)
+"""
+struct ThirtyE360 <: DayCount end
+const EurobondBasis = ThirtyE360
+function yearfraction(startdate::Date, enddate::Date, ::ThirtyE360)
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
     d1 = min(day(startdate),30)
@@ -38,48 +121,26 @@ function yearfrac(startdate::Date, enddate::Date, dc::Type{Thirty360E})
     return dy+dm/12+(d2-d1)/360
 end
 
-# Eurobond (ISDA) Basis
-function yearfrac(startdate::Date, enddate::Date, termdate::Date, dc::Type{Thirty360ISDA})
+"""
+    ThirtyE360ISDA(maturity::Date)
+    
+"30E/360 (ISDA)" day count convention.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (h)
+"""
+struct ThirtyE360ISDA <: DayCount
+    maturity::Date
+end
+function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
     y1 = year(startdate)
     y2 = year(enddate)
     dm = month(enddate)-month(startdate)
     d1 = day(startdate)
     d2 = day(enddate)
     d1 = d1 == lastdayofmonth(Date(y1,2)) ? 30 : min(d1,30)
-    d2 = ((d2 == lastdayofmonth(Date(y1,2))) & (enddate != termdate)) ? 30 : min(d1,30)
+    d2 = ((d2 == lastdayofmonth(Date(y1,2))) & (enddate != dc.maturity)) ? 30 : min(d1,30)
     return y2-y1+dm/12+(d2-d1)/360
-end
-
-function yearfrac(startdate::Date, enddate::Date, dc::Type{Actual360})
-    return Dates.value(enddate-startdate)/360
-end
-
-function yearfrac(startdate::Date, enddate::Date, dc::Type{Actual365})
-    return Dates.value(enddate-startdate)/365
-end
-
-function yearfrac(startdate::Date, enddate::Date, dc::Type{ActualActual})
-    years = year(startdate):year(enddate-Day(1))
-    if any(isleapyear.(years))
-        if length(years) > 1
-            yf = 0.
-            s = startdate
-            for y in years
-                e = lastdayofyear(s) > enddate ? enddate : lastdayofyear(s)+Day(1)
-                if isleapyear(e-Day(1))
-                    yf += Dates.value(e-s)/366
-                else
-                    yf += Dates.value(e-s)/365
-                end
-                s = e
-            end
-            return yf
-        else
-            return Dates.value(enddate-startdate)/366
-        end
-    else
-        return Dates.value(enddate-startdate)/365
-    end
 end
 
 end # module
