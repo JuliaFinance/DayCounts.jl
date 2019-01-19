@@ -45,11 +45,12 @@ julia> yearfrac(d1, d2, DayCounts.ActualActualISDA())
 - [Nasdaq Day Count Fractions](https://business.nasdaq.com/media/day-count-fractions_tcm5044-53854.pdf)
 
 # Interface
+## Functions
 ```@docs
 yearfrac
 ```
 
-# [`DayCount` types](@id daycount_types)
+## [`DayCount` types](@id daycount_types)
 ```@docs
 DayCounts.Actual365Fixed
 DayCounts.Actual360
