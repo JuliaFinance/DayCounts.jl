@@ -1,6 +1,6 @@
 # DayCounts.jl
 
-[![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url]
+[![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][documenter-dev-img]][documenter-dev-url]
 
 ## Summary
 
@@ -53,3 +53,6 @@ We used the following sources:
 
 [appveyor-img]: https://ci.appveyor.com/api/projects/status/2rlf3g68ocvmc71q/branch/master?svg=true
 [appveyor-url]: https://ci.appveyor.com/project/EricForgy/daycounts-jl
+
+[documenter-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[documenter-dev-url]: https://juliafinance.github.io/DayCounts.jl/dev/
