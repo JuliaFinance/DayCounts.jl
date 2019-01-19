@@ -24,7 +24,7 @@ julia> yearfrac(d1, d2, DayCounts.Actual365Fixed())
 julia> yearfrac(d1, d2, DayCounts.ActualActualISDA())
 0.2465753424657534
 
-julia> d1, d2 = Date("2020-01-01"), Date("2020-04-01") # standard year
+julia> d1, d2 = Date("2020-01-01"), Date("2020-04-01") # leap year
 (2020-01-01, 2020-04-01)
 
 julia> yearfrac(d1, d2, DayCounts.Thirty360())
