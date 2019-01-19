@@ -5,17 +5,18 @@ module DayCounts
 
 using Dates
 
-export yearfraction, DayCount,
+export yearfrac, DayCount,
     Actual365Fixed, Actual365F, Actual360, ActualActualISDA,
+    ActualActualICMA, ActualActualISMA, ISMA99,
     Thirty360, BondBasis, ThirtyE360, EurobondBasis, ThirtyE360ISDA
 
 """
-    yearfraction(startdate::Date, enddate::Date, dc::DayCount)
+    yearfrac(startdate::Date, enddate::Date, dc::DayCount)
 
 Compute the fractional number of years between `startdate` and `enddate`, according to the
 [`DayCount` object](@ref daycount_types) `dc`.
 """
-function yearfraction
+function yearfrac
 end
 
 
@@ -37,7 +38,7 @@ The year fraction is computed as:
 """
 struct Actual365Fixed <: DayCount end
 const Actual365F = Actual365Fixed
-function yearfraction(startdate::Date, enddate::Date, ::Actual365Fixed)
+function yearfrac(startdate::Date, enddate::Date, ::Actual365Fixed)
     return Dates.value(enddate-startdate)/365
 end
 
@@ -56,7 +57,7 @@ The year fraction is computed as:
 
 """
 struct Actual360 <: DayCount end
-function yearfraction(startdate::Date, enddate::Date, ::Actual360)
+function yearfrac(startdate::Date, enddate::Date, ::Actual360)
     return Dates.value(enddate-startdate)/360
 end
 
@@ -78,7 +79,7 @@ For the purposes of above, the start date is included and the end date is exclud
  - 2006 ISDA definitions, §4.16 (b)
 """
 struct ActualActualISDA <: DayCount end
-function yearfraction(startdate::Date, enddate::Date, ::ActualActualISDA)
+function yearfrac(startdate::Date, enddate::Date, ::ActualActualISDA)
     startyear = year(startdate)
     endyear = year(enddate)
     if startyear == endyear
@@ -91,6 +92,63 @@ function yearfraction(startdate::Date, enddate::Date, ::ActualActualISDA)
         return n1/d1 + n2/d2 + (endyear - startyear - 1)
     end
 end
+
+
+"""
+    ActualActualICMA(schedule::StepRange{Date,Month})
+    ActualActualISMA(schedule::StepRange{Date,Month})
+    ISMA99(schedule::StepRange{Date,Month})
+
+**Actual/Actual (ICMA)**, **Actual/Actual (ISMA)** or **ISMA-99** day count convention.
+
+Note that this is dependent on the coupon or payment schedule of the underlying
+security. This is provided via the `schedule` argument, currently only date ranges with
+steps of months are supported.
+
+The year fraction is computed as:
+```math
+\\sum_{\\text{schedule period}} \\frac{\\text{# of days in period}}{\\text{length of period} \\times \\text{periods per year}}
+```
+
+This ensures that:
+* all days in a period are of equal length, and
+* all periods are of equal length.
+
+# Reference
+ - 2006 ISDA definitions, §4.16 (c).
+ - [ICMA Rule Book](https://www.isda.org/a/NIJEE/ICMA-Rule-Book-Rule-251-reproduced-by-permission-of-ICMA.pdf), Rule 251.1 (iii).
+ - [EMU and Market Conventions: Recent Developments, ISDA - BS:9951.1](https://www.isda.org/a/AIJEE/1998-ISDA-memo-EMU-and-Market-Conventions-Recent-Developments.pdf), §4. The Actual/Actual Day Count Convention.
+"""
+struct ActualActualICMA <: DayCount
+    schedule::StepRange{Date,Month}
+end
+const ActualActualISMA = ActualActualICMA
+const ISMA99 = ActualActualICMA
+
+function yearfrac(startdate::Date, enddate::Date, dc::ActualActualICMA)
+    frequency = Month(12)/step(dc.schedule)
+
+    r1 = searchsorted(dc.schedule, startdate)
+    i1, j1 = last(r1), first(r1)
+    r2 = searchsorted(dc.schedule, enddate)
+    i2, j2 = last(r2), first(r2)
+
+    if i1 == i2 || j1 == j2
+        i = min(i1,i2)
+        j = max(j1,j2)
+        if i == j
+            return 0.0
+        else
+            return Dates.value(enddate - startdate) / (frequency * Dates.value(dc.schedule[j] - dc.schedule[i]))
+        end
+    end
+    
+    f1 = i1 == j1 ? 0.0 : (dc.schedule[j1] - startdate) / (dc.schedule[j1] - dc.schedule[i1])
+    f2 = i2 == j2 ? 0.0 : (enddate - dc.schedule[i2]) / (dc.schedule[j2] - dc.schedule[i2])
+
+    (f1+f2+(i2-j1))/frequency
+end
+
 
 # helper function
 thirty360(dy,dm,dd) = (360*dy + 30*dm + dd)/360
@@ -118,7 +176,7 @@ where
 """
 struct Thirty360 <: DayCount end
 const BondBasis = Thirty360
-function yearfraction(startdate::Date, enddate::Date, ::Thirty360)
+function yearfrac(startdate::Date, enddate::Date, ::Thirty360)
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
 
@@ -144,17 +202,17 @@ The year fraction is computed as:
 where
 - ``y_1`` and ``y_2`` are the years of the start and end date, respectively.
 - ``m_1`` and ``m_2`` are the months of the start and end date, respectively.
-- ``d_1`` is the day of the month at the start date, unless it is 31, in which case it is
-  30.
-- ``d_2`` is the day of the month at the end date, unless it is 31, in which case it is
-  30.
+- ``d_1`` is the day of the month at the start date, unless it is 31st day of the month,
+  in which case it is 30.
+- ``d_2`` is the day of the month at the end date,  unless it is 31st day of the month,
+  in which case it is 30.
 
 # Reference
  - 2006 ISDA definitions, §4.16 (g)
 """
 struct ThirtyE360 <: DayCount end
 const EurobondBasis = ThirtyE360
-function yearfraction(startdate::Date, enddate::Date, ::ThirtyE360)
+function yearfrac(startdate::Date, enddate::Date, ::ThirtyE360)
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
     d1 = min(day(startdate),30)
@@ -165,7 +223,8 @@ end
 """
     ThirtyE360ISDA(maturity::Date)
 
-**30E/360 (ISDA)** day count convention.
+**30E/360 (ISDA)** day count convention. Note that this is dependant of the maturity date
+of the underlying security, provided as the `maturity` argument.
 
 The year fraction is computed as:
 ```math
@@ -174,10 +233,14 @@ The year fraction is computed as:
 where
 - ``y_1`` and ``y_2`` are the years of the start and end date, respectively.
 - ``m_1`` and ``m_2`` are the months of the start and end date, respectively.
-- ``d_1`` is the day of the month at the start date, unless it is the last day of
-  February, or 31, in which case it is 30.
-- ``d_2`` is the day of the month at the end date, unless it is the last day of February
-  and not the maturity date, or 31, in which case it is 30.
+- ``d_1`` is the day of the month at the start date, unless it is:
+  * the last day of February, or
+  * the 31st day of the month,
+  in which case it is 30.
+- ``d_2`` is the day of the month at the end date, unless it is:
+  * the last day of February and not the maturity date, or
+  * the 31st day of the month,
+  in which case it is 30.
 
 # Reference
  - 2006 ISDA definitions, §4.16 (h)
@@ -185,7 +248,7 @@ where
 struct ThirtyE360ISDA <: DayCount
     maturity::Date
 end
-function yearfraction(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
+function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
     y1 = year(startdate)
     y2 = year(enddate)
     m1 = month(startdate)
