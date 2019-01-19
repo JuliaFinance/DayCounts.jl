@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DayCounts.jl",
     "title": "Example",
     "category": "section",
-    "text": "julia> using DayCounts, Dates\n\njulia> d1, d2 = Date(\"2019-01-01\"), Date(\"2019-04-01\") # standard year\n(2019-01-01, 2019-04-01)\n\njulia> yearfrac(d1, d2, DayCounts.Thirty360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual365Fixed())\n0.2465753424657534\n\njulia> yearfrac(d1, d2, DayCounts.ActualActualISDA())\n0.2465753424657534\n\njulia> d1, d2 = Date(\"2020-01-01\"), Date(\"2020-04-01\") # standard year\n(2020-01-01, 2020-04-01)\n\njulia> yearfrac(d1, d2, DayCounts.Thirty360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual360())\n0.25277777777777777\n\njulia> yearfrac(d1, d2, DayCounts.Actual365Fixed())\n0.2493150684931507\n\njulia> yearfrac(d1, d2, DayCounts.ActualActualISDA())\n0.24863387978142076"
+    "text": "julia> using DayCounts, Dates\n\njulia> d1, d2 = Date(\"2019-01-01\"), Date(\"2019-04-01\") # standard year\n(2019-01-01, 2019-04-01)\n\njulia> yearfrac(d1, d2, DayCounts.Thirty360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual365Fixed())\n0.2465753424657534\n\njulia> yearfrac(d1, d2, DayCounts.ActualActualISDA())\n0.2465753424657534\n\njulia> d1, d2 = Date(\"2020-01-01\"), Date(\"2020-04-01\") # leap year\n(2020-01-01, 2020-04-01)\n\njulia> yearfrac(d1, d2, DayCounts.Thirty360())\n0.25\n\njulia> yearfrac(d1, d2, DayCounts.Actual360())\n0.25277777777777777\n\njulia> yearfrac(d1, d2, DayCounts.Actual365Fixed())\n0.2493150684931507\n\njulia> yearfrac(d1, d2, DayCounts.ActualActualISDA())\n0.24863387978142076"
 },
 
 {
@@ -33,6 +33,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Interface-1",
+    "page": "DayCounts.jl",
+    "title": "Interface",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "#DayCounts.yearfrac",
     "page": "DayCounts.jl",
     "title": "DayCounts.yearfrac",
@@ -41,9 +49,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Interface-1",
+    "location": "#Functions-1",
     "page": "DayCounts.jl",
-    "title": "Interface",
+    "title": "Functions",
     "category": "section",
     "text": "yearfrac"
 },
