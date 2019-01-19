@@ -12,31 +12,31 @@ julia> using DayCounts, Dates
 julia> d1, d2 = Date("2019-01-01"), Date("2019-04-01") # standard year
 (2019-01-01, 2019-04-01)
 
-julia> yearfrac(d1, d2, Thirty360())
+julia> yearfrac(d1, d2, DayCounts.Thirty360())
 0.25
 
-julia> yearfrac(d1, d2, Actual360())
+julia> yearfrac(d1, d2, DayCounts.Actual360())
 0.25
 
-julia> yearfrac(d1, d2, Actual365Fixed())
+julia> yearfrac(d1, d2, DayCounts.Actual365Fixed())
 0.2465753424657534
 
-julia> yearfrac(d1, d2, ActualActualISDA())
+julia> yearfrac(d1, d2, DayCounts.ActualActualISDA())
 0.2465753424657534
 
 julia> d1, d2 = Date("2020-01-01"), Date("2020-04-01") # standard year
 (2020-01-01, 2020-04-01)
 
-julia> yearfrac(d1, d2, Thirty360())
+julia> yearfrac(d1, d2, DayCounts.Thirty360())
 0.25
 
-julia> yearfrac(d1, d2, Actual360())
+julia> yearfrac(d1, d2, DayCounts.Actual360())
 0.25277777777777777
 
-julia> yearfrac(d1, d2, Actual365Fixed())
+julia> yearfrac(d1, d2, DayCounts.Actual365Fixed())
 0.2493150684931507
 
-julia> yearfrac(d1, d2, ActualActualISDA())
+julia> yearfrac(d1, d2, DayCounts.ActualActualISDA())
 0.24863387978142076
 ```
 
@@ -51,12 +51,12 @@ yearfrac
 
 # [`DayCount` types](@id daycount_types)
 ```@docs
-Actual365Fixed
-Actual360
-ActualActualISDA
-ActualActualICMA
-Thirty360
-ThirtyE360
-ThirtyE360ISDA
+DayCounts.Actual365Fixed
+DayCounts.Actual360
+DayCounts.ActualActualISDA
+DayCounts.ActualActualICMA
+DayCounts.Thirty360
+DayCounts.ThirtyE360
+DayCounts.ThirtyE360ISDA
 ```
 

@@ -4,10 +4,7 @@ module DayCounts
 # https://www.isda.org/2008/12/22/30-360-day-count-conventions/
 
 using Dates
-
-export yearfrac, DayCount,
-    Actual365Fixed, Actual360, ActualActualISDA, ActualActualICMA,
-    Thirty360, ThirtyE360, ThirtyE360ISDA
+export yearfrac
 
 """
     yearfrac(startdate::Date, enddate::Date, dc::DayCount)
@@ -163,7 +160,7 @@ where
 - ``m_1`` and ``m_2`` are the months of the start and end date, respectively.
 - ``d_1`` is the day of the month at the start date, unless it is 31, in which case it is
   30.
-- ``d_2`` is the day of the month at the end date, unless it is 31 and ``d_1 > 29``, in
+- ``d_2`` is the day of the month at the end date, unless it is 31 and ``d_1 ≥ 30``, in
   which case it is 30.
 
 # Reference
@@ -179,7 +176,9 @@ function yearfrac(startdate::Date, enddate::Date, ::Thirty360)
     d2 = day(enddate)
     if d1 >= 30
         d1 = 30
-        d2 = min(d2,30)
+        if d2 >= 30
+            d2 = 30
+        end
     end
     return thirty360(dy,dm,d2-d1)
 end

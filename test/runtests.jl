@@ -4,7 +4,7 @@ using Test
 # based on tests from OpenGamma Strata
 # https://github.com/OpenGamma/Strata/blob/efaa0be0d08dc61c23692e7b86df101ea0fb7223/modules/basics/src/test/java/com/opengamma/strata/basics/date/DayCountTest.java
 @testset "Actual365Fixed" begin
-    dc = Actual365Fixed()
+    dc = DayCounts.Actual365Fixed()
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == (4 + 58) / 365
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == (4 + 59) / 365
     @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == (4 + 60) / 365
@@ -17,7 +17,7 @@ using Test
 end
 
 @testset "Actual360" begin
-    dc = Actual360()
+    dc = DayCounts.Actual360()
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == (4 + 58) / 360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == (4 + 59) / 360
     @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == (4 + 60) / 360
@@ -30,7 +30,7 @@ end
 end
 
 @testset "ActualActualISDA" begin
-    dc = ActualActualISDA()
+    dc = DayCounts.ActualActualISDA()
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == 4 / 365 + 58 / 366
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == 4 / 365 + 59 / 366
     @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == 4 / 365 + 60 / 366
@@ -43,7 +43,7 @@ end
 end
 
 @testset "Thirty360" begin
-    dc = Thirty360()
+    dc = DayCounts.Thirty360()
     # usual rule: ((d2-d1) + (m2-m1)*30 + (y2-y1)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360
@@ -67,7 +67,7 @@ end
 end
 
 @testset "ThirtyE360" begin
-    dc = ThirtyE360()
+    dc = DayCounts.ThirtyE360()
     # usual rule: ((d2-d1) + (m2-m1)*30 + (y2-y1)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360
@@ -92,7 +92,7 @@ end
 
 @testset "ThirtyE360ISDA" begin
     @testset "maturity not end of Feb" begin
-        dc = ThirtyE360ISDA(Date(2012, 8, 31))
+        dc = DayCounts.ThirtyE360ISDA(Date(2012, 8, 31))
         @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
         @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((30-28) + (2-12)*30 + (2012-2011)*360)/360 # exception
         @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == ((1-28) + (3-12)*30 + (2012-2011)*360)/360
@@ -115,7 +115,7 @@ end
     end
 
     @testset "maturity end of Feb" begin
-        dc = ThirtyE360ISDA(Date(2012, 2,29)) # leap year, end of month
+        dc = DayCounts.ThirtyE360ISDA(Date(2012, 2,29)) # leap year, end of month
         @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
         @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360
         @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == ((1-28) + (3-12)*30 + (2012-2011)*360)/360
@@ -146,8 +146,8 @@ end
     # https://www.isda.org/a/AIJEE/1998-ISDA-memo-EMU-and-Market-Conventions-Recent-Developments.pdf
     
     @testset "short first" begin
-        dc_isda = ActualActualISDA()
-        dc_icma = ActualActualICMA(Date(1998,7,1):Month(12):Date(2000,7,1))
+        dc_isda = DayCounts.ActualActualISDA()
+        dc_icma = DayCounts.ActualActualICMA(Date(1998,7,1):Month(12):Date(2000,7,1))
 
         @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_isda) ≈ 0.41096 atol=0.000005
         @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_icma) ≈ 0.41096 atol=0.000005
@@ -160,8 +160,8 @@ end
     end
 
     @testset "long first" begin
-        dc_isda = ActualActualISDA()
-        dc_icma = ActualActualICMA(Date(2002,7,15):Month(6):Date(2004,1,15))
+        dc_isda = DayCounts.ActualActualISDA()
+        dc_icma = DayCounts.ActualActualICMA(Date(2002,7,15):Month(6):Date(2004,1,15))
 
         @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_isda) ≈ 0.91507 atol=0.000005
         @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_icma) ≈ 0.91576 atol=0.000005
@@ -175,8 +175,8 @@ end
     end
 
     @testset "short final" begin
-        dc_isda = ActualActualISDA()        
-        dc_icma = ActualActualICMA(Date(1999,7,30):Month(6):Date(2000,7,30))
+        dc_isda = DayCounts.ActualActualISDA()        
+        dc_icma = DayCounts.ActualActualICMA(Date(1999,7,30):Month(6):Date(2000,7,30))
 
         @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_isda) ≈ 0.50389 atol=0.000005
         @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_icma) == 0.5
@@ -189,9 +189,9 @@ end
     end
         
     @testset "long final" begin
-        dc_isda = ActualActualISDA()
+        dc_isda = DayCounts.ActualActualISDA()
         # TODO: need a way to express "last day of month" schedules.
-        dc_icma = ActualActualICMA(Date(1999,5,31):Month(3):Date(2000,5,31))
+        dc_icma = DayCounts.ActualActualICMA(Date(1999,5,31):Month(3):Date(2000,5,31))
 
         @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_isda) ≈ 0.41554 atol=0.000005
         @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_icma) ≈ 0.41576 atol=0.000005
