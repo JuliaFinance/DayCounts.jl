@@ -6,9 +6,8 @@ module DayCounts
 using Dates
 
 export yearfrac, DayCount,
-    Actual365Fixed, Actual365F, Actual360, ActualActualISDA,
-    ActualActualICMA, ActualActualISMA, ISMA99,
-    Thirty360, BondBasis, ThirtyE360, EurobondBasis, ThirtyE360ISDA
+    Actual365Fixed, Actual360, ActualActualISDA, ActualActualICMA,
+    Thirty360, ThirtyE360, ThirtyE360ISDA
 
 """
     yearfrac(startdate::Date, enddate::Date, dc::DayCount)
@@ -24,7 +23,6 @@ abstract type DayCount end
 
 """
     Actual365Fixed()
-    Actual365F()
 
 **Actual/365 (Fixed)** day count convention.
 
@@ -96,8 +94,6 @@ end
 
 """
     ActualActualICMA(schedule::StepRange{Date,Month})
-    ActualActualISMA(schedule::StepRange{Date,Month})
-    ISMA99(schedule::StepRange{Date,Month})
 
 **Actual/Actual (ICMA)**, **Actual/Actual (ISMA)** or **ISMA-99** day count convention.
 
@@ -142,7 +138,7 @@ function yearfrac(startdate::Date, enddate::Date, dc::ActualActualICMA)
             return Dates.value(enddate - startdate) / (frequency * Dates.value(dc.schedule[j] - dc.schedule[i]))
         end
     end
-    
+
     f1 = i1 == j1 ? 0.0 : (dc.schedule[j1] - startdate) / (dc.schedule[j1] - dc.schedule[i1])
     f2 = i2 == j2 ? 0.0 : (enddate - dc.schedule[i2]) / (dc.schedule[j2] - dc.schedule[i2])
 
@@ -155,7 +151,6 @@ thirty360(dy,dm,dd) = (360*dy + 30*dm + dd)/360
 
 """
     Thirty360()
-    BondBasis()
 
 **30/360** or **Bond Basis** day count convention.
 
@@ -191,7 +186,6 @@ end
 
 """
     ThirtyE360()
-    EurobondBasis()
 
 **30E/360** or **Eurobond Basis** day count convention.
 
