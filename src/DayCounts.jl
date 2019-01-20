@@ -112,11 +112,11 @@ This ensures that:
  - [ICMA Rule Book](https://www.isda.org/a/NIJEE/ICMA-Rule-Book-Rule-251-reproduced-by-permission-of-ICMA.pdf), Rule 251.1 (iii).
  - [EMU and Market Conventions: Recent Developments, ISDA - BS:9951.1](https://www.isda.org/a/AIJEE/1998-ISDA-memo-EMU-and-Market-Conventions-Recent-Developments.pdf), §4. The Actual/Actual Day Count Convention.
 """
-struct ActualActualICMA <: DayCount
-    frequency
-    schedule::Vector{Date}
+struct ActualActualICMA{T<:AbstractVector{Date}} <: DayCount
+    frequency::Int
+    schedule::T
 end
-ActualActualICMA(schedule::StepRange{Date,Month}) = ActualActualICMA(Month(12)/step(schedule),collect(schedule))
+ActualActualICMA(schedule::StepRange{Date,Month}) = ActualActualICMA(Int(Month(12)/step(schedule)),schedule)
 const ActualActualISMA = ActualActualICMA
 const ISMA99 = ActualActualICMA
 
