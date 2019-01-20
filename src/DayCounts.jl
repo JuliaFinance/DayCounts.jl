@@ -112,36 +112,37 @@ This ensures that:
  - [ICMA Rule Book](https://www.isda.org/a/NIJEE/ICMA-Rule-Book-Rule-251-reproduced-by-permission-of-ICMA.pdf), Rule 251.1 (iii).
  - [EMU and Market Conventions: Recent Developments, ISDA - BS:9951.1](https://www.isda.org/a/AIJEE/1998-ISDA-memo-EMU-and-Market-Conventions-Recent-Developments.pdf), §4. The Actual/Actual Day Count Convention.
 """
-struct ActualActualICMA <: DayCount
-    schedule::StepRange{Date,Month}
+struct ActualActualICMA{T<:AbstractVector{Date}} <: DayCount
+    frequency::Int
+    schedule::T
 end
+ActualActualICMA(schedule::StepRange{Date,Month}) = ActualActualICMA(Int(Month(12)/step(schedule)),schedule)
 const ActualActualISMA = ActualActualICMA
 const ISMA99 = ActualActualICMA
 
 function yearfrac(startdate::Date, enddate::Date, dc::ActualActualICMA)
-    frequency = Month(12)/step(dc.schedule)
+    if startdate > enddate
+        return -yearfrac(enddate,startdate,dc)
+    end      
+    startdate < first(dc.schedule) || enddate > last(dc.schedule) && error("The start and end dates must be contained within the scheduled dates.")
 
-    r1 = searchsorted(dc.schedule, startdate)
-    i1, j1 = last(r1), first(r1)
-    r2 = searchsorted(dc.schedule, enddate)
-    i2, j2 = last(r2), first(r2)
+    schedule = dc.schedule
 
-    if i1 == i2 || j1 == j2
-        i = min(i1,i2)
-        j = max(j1,j2)
-        if i == j
-            return 0.0
-        else
-            return Dates.value(enddate - startdate) / (frequency * Dates.value(dc.schedule[j] - dc.schedule[i]))
-        end
-    end
+    periodfrac = 0.
 
-    f1 = i1 == j1 ? 0.0 : (dc.schedule[j1] - startdate) / (dc.schedule[j1] - dc.schedule[i1])
-    f2 = i2 == j2 ? 0.0 : (enddate - dc.schedule[i2]) / (dc.schedule[j2] - dc.schedule[i2])
+    # Fraction of the last period
+    istart = findlast(x -> x < enddate, schedule)
+    periodfrac += schedule[istart+1] == enddate ? 1. : Dates.value(enddate-schedule[istart])/Dates.value(schedule[istart+1]-schedule[istart])
 
-    (f1+f2+(i2-j1))/frequency
+    # Fraction of the first period
+    inext = findfirst(x -> x >= startdate, schedule)
+    periodfrac += schedule[inext] == startdate ? 0. : Dates.value(schedule[inext]-startdate)/Dates.value(schedule[inext]-schedule[inext-1])
+
+    # Number of full period between the first and last periods
+    periodfrac += istart-inext
+
+    return periodfrac/dc.frequency
 end
-
 
 # helper function
 thirty360(dy,dm,dd) = (360*dy + 30*dm + dd)/360
