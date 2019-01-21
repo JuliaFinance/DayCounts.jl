@@ -59,5 +59,5 @@ DayCounts.ActualActualICMA
 DayCounts.Thirty360
 DayCounts.ThirtyE360
 DayCounts.ThirtyE360ISDA
+DayCounts.Thirty360Excel
 ```
-

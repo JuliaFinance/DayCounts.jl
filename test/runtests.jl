@@ -233,13 +233,13 @@ end
         dc_icma = DayCounts.ActualActualICMA(Date(1998,7,1):Month(12):Date(2000,7,1))
 
         @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_isda) == 150/365
-        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_icma) == 150/365
+        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_icma) ≈ 150/365 atol=eps()
 
         @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_isda) == 184/365 + 182/366
         @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_icma) == 366/366
 
         @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_isda) == (150 + 184)/365 + 182/366 
-        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_icma) == 150/365 + 366/366
+        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_icma) ≈ 150/365 + 366/366 atol=eps()
     end
 
     @testset "long first" begin
