@@ -11,6 +11,9 @@ export yearfrac
 
 Compute the fractional number of years between `startdate` and `enddate`, according to the
 [`DayCount` object](@ref daycount_types) `dc`.
+
+- If `startdate == enddate`, then the result is zero.
+- If `startdate > enddate`, then the result is `-yearfrac(enddate, startdate, dc)`.
 """
 function yearfrac
 end
@@ -74,7 +77,10 @@ For the purposes of above, the start date is included and the end date is exclud
  - 2006 ISDA definitions, §4.16 (b)
 """
 struct ActualActualISDA <: DayCount end
-function yearfrac(startdate::Date, enddate::Date, ::ActualActualISDA)
+function yearfrac(startdate::Date, enddate::Date, dc::ActualActualISDA)
+    if startdate > enddate
+        return -yearfrac(enddate, startdate, dc)
+    end
     startyear = year(startdate)
     endyear = year(enddate)
     if startyear == endyear
@@ -123,7 +129,7 @@ const ISMA99 = ActualActualICMA
 function yearfrac(startdate::Date, enddate::Date, dc::ActualActualICMA)
     if startdate > enddate
         return -yearfrac(enddate,startdate,dc)
-    end      
+    end
     startdate < first(dc.schedule) || enddate > last(dc.schedule) && error("The start and end dates must be contained within the scheduled dates.")
 
     schedule = dc.schedule
@@ -169,7 +175,11 @@ where
 """
 struct Thirty360 <: DayCount end
 const BondBasis = Thirty360
-function yearfrac(startdate::Date, enddate::Date, ::Thirty360)
+function yearfrac(startdate::Date, enddate::Date, dc::Thirty360)
+    if startdate > enddate
+        return -yearfrac(enddate, startdate, dc)
+    end
+
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
 
@@ -206,7 +216,11 @@ where
 """
 struct ThirtyE360 <: DayCount end
 const EurobondBasis = ThirtyE360
-function yearfrac(startdate::Date, enddate::Date, ::ThirtyE360)
+
+function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360)
+    if startdate > enddate
+        return -yearfrac(enddate, startdate, dc)
+    end
     dy = year(enddate)-year(startdate)
     dm = month(enddate)-month(startdate)
     d1 = min(day(startdate),30)
@@ -243,6 +257,12 @@ struct ThirtyE360ISDA <: DayCount
     maturity::Date
 end
 function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
+    if startdate > enddate
+        return -yearfrac(enddate, startdate, dc)
+    elseif startdate == enddate
+        # in case startdate == enddate == maturitydate == end of Feb.
+        return 0.0
+    end
     y1 = year(startdate)
     y2 = year(enddate)
     m1 = month(startdate)
