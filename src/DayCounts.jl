@@ -272,4 +272,6 @@ function yearfrac(startdate::Date, enddate::Date, dc::ThirtyE360ISDA)
     return thirty360(y2-y1,m2-m1,d2-d1)
 end
 
+include("excel.jl")
+
 end # module

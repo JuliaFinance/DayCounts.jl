@@ -232,43 +232,44 @@ end
         dc_isda = DayCounts.ActualActualISDA()
         dc_icma = DayCounts.ActualActualICMA(Date(1998,7,1):Month(12):Date(2000,7,1))
 
-        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_isda) ≈ 0.41096 atol=0.000005
-        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_icma) ≈ 0.41096 atol=0.000005
+        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_isda) == 150/365
+        @test yearfrac(Date(1999,2,1), Date(1999,7,1), dc_icma) == 150/365
 
-        @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_isda) ≈ 1.00138 atol=0.000005
-        @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_icma) == 1.0
+        @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_isda) == 184/365 + 182/366
+        @test yearfrac(Date(1999,7,1), Date(2000,7,1), dc_icma) == 366/366
 
-        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_isda) ≈ 0.41096 + 1.00138 atol=0.000005
-        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_icma) ≈ 0.41096 + 1.0     atol=0.000005
+        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_isda) == (150 + 184)/365 + 182/366 
+        @test yearfrac(Date(1999,2,1), Date(2000,7,1), dc_icma) == 150/365 + 366/366
     end
 
     @testset "long first" begin
         dc_isda = DayCounts.ActualActualISDA()
         dc_icma = DayCounts.ActualActualICMA(Date(2002,7,15):Month(6):Date(2004,1,15))
 
-        @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_isda) ≈ 0.91507 atol=0.000005
-        @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_icma) ≈ 0.91576 atol=0.000005
+        @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_isda) == 334/365
+        @test yearfrac(Date(2002,8,15), Date(2003,7,15), dc_icma) == 181/(181*2) + 153/(184*2)
 
         # This appears to be an error in the memo
-        # they calculate it as 184/365, but it should be 170/365 + 14/366?
-        # @test yearfrac(Date(2003,7,15),Date(2004,1,15), dc_isda) ≈ 0.50411 atol=0.000005
-        @test yearfrac(Date(2003,7,15), Date(2004,1,15), dc_icma) == 0.5
+        # it claims it should be 184/365
+        @test yearfrac(Date(2003,7,15),Date(2004,1,15), dc_isda) == 170/365 + 14/366
+        @test yearfrac(Date(2003,7,15), Date(2004,1,15), dc_icma) == 184/(184*2)
 
-        @test yearfrac(Date(2002,8,15), Date(2004,1,15), dc_icma) ≈ 0.91576 + 0.5 atol=0.000005
+        @test yearfrac(Date(2002,8,15), Date(2004,1,15), dc_isda) ≈ (334+170)/365 + 14/366 rtol=eps()
+        @test yearfrac(Date(2002,8,15), Date(2004,1,15), dc_icma) == 181/(181*2) + (153+184)/(184*2)
     end
 
     @testset "short final" begin
         dc_isda = DayCounts.ActualActualISDA()
         dc_icma = DayCounts.ActualActualICMA(Date(1999,7,30):Month(6):Date(2000,7,30))
 
-        @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_isda) ≈ 0.50389 atol=0.000005
-        @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_icma) == 0.5
+        @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_isda) == 155/365 + 29/366
+        @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_icma) == 184/(184*2)
 
-        @test yearfrac(Date(2000,1,30), Date(2000,6,30), dc_isda) ≈ 0.41530 atol=0.000005
-        @test yearfrac(Date(2000,1,30), Date(2000,6,30), dc_icma) ≈ 0.41758 atol=0.000005
+        @test yearfrac(Date(2000,1,30), Date(2000,6,30), dc_isda) == 152/366
+        @test yearfrac(Date(2000,1,30), Date(2000,6,30), dc_icma) == 152/(182*2)
 
-        @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_isda) ≈ 0.50389 + 0.41530 atol=0.000005
-        @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_icma) ≈ 0.5     + 0.41758 atol=0.000005
+        @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_isda) == 155/365 + (29+152)/366
+        @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_icma) == 184/(184*2) + 152/(182*2)
     end
 
     @testset "long final" begin
@@ -276,7 +277,32 @@ end
         # TODO: need a way to express "last day of month" schedules.
         dc_icma = DayCounts.ActualActualICMA(Date(1999,5,31):Month(3):Date(2000,5,31))
 
-        @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_isda) ≈ 0.41554 atol=0.000005
-        @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_icma) ≈ 0.41576 atol=0.000005
+        @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_isda) == 32/365 + 120/366
+        @test yearfrac(Date(1999,11,30), Date(2000,4,30), dc_icma) == 91/(91*4) + 61/(92*4)
     end
+end
+
+
+@testset "Thirty360Excel" begin
+    dc = DayCounts.Thirty360Excel()
+    # usual rule: ((d2-d1) + (m2-m1)*30 + (y2-y1)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == ((1-28) + (3-12)*30 + (2012-2011)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2016, 2,28), dc) == ((28-28) + (2-12)*30 + (2016-2011)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2016, 2,29), dc) == ((29-28) + (2-12)*30 + (2016-2011)*360)/360
+    @test yearfrac(Date(2011,12,28), Date(2016, 3, 1), dc) == ((1-28) + (3-12)*30 + (2016-2011)*360)/360
+    @test yearfrac(Date(2012, 2,28), Date(2012, 3,28), dc) == ((28-28) + (3-2)*30 + (2012-2012)*360)/360
+    @test yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc) == ((30-29) + (3-2)*30 + (2012-2012)*360)/360 # exception
+    @test yearfrac(Date(2012, 3, 1), Date(2012, 3,28), dc) == ((28-1) + (3-3)*30 + (2012-2012)*360)/360
+
+    @test yearfrac(Date(2012, 5,29), Date(2013, 8,29), dc) == ((29-29) + (8-5)*30 + (2013-2012)*360)/360
+    @test yearfrac(Date(2012, 5,29), Date(2013, 8,30), dc) == ((30-29) + (8-5)*30 + (2013-2012)*360)/360
+    @test yearfrac(Date(2012, 5,29), Date(2013, 8,31), dc) == ((31-29) + (8-5)*30 + (2013-2012)*360)/360
+    @test yearfrac(Date(2012, 5,30), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360
+    @test yearfrac(Date(2012, 5,30), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360
+    @test yearfrac(Date(2012, 5,30), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+    @test yearfrac(Date(2012, 5,31), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+    @test yearfrac(Date(2012, 5,31), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+    @test yearfrac(Date(2012, 5,31), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
 end
