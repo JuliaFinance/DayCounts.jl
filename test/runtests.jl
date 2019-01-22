@@ -362,3 +362,5 @@ end
     @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
     @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
+
+include("excel.jl")
