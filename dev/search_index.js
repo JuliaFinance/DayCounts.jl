@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DayCounts.jl",
     "title": "DayCounts.yearfrac",
     "category": "function",
-    "text": "yearfrac(startdate::Date, enddate::Date, dc::DayCount)\n\nCompute the fractional number of years between startdate and enddate, according to the DayCount object dc.\n\n\n\n\n\n"
+    "text": "yearfrac(startdate::Date, enddate::Date, dc::DayCount)\n\nCompute the fractional number of years between startdate and enddate, according to the DayCount object dc.\n\nIf startdate == enddate, then the result is zero.\nIf startdate > enddate, then the result is -yearfrac(enddate, startdate, dc).\n\n\n\n\n\n"
 },
 
 {
