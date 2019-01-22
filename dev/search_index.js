@@ -113,11 +113,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#DayCounts.Thirty360Excel",
+    "page": "DayCounts.jl",
+    "title": "DayCounts.Thirty360Excel",
+    "category": "type",
+    "text": "Thirty360Excel()\n\n**30/360* day count convention, as computed via Microsoft Excel YEARFRAC with the basis option of 0.\n\nThis differs from Thirty360 when:\n\nif the start date is the last day of February, then\nd_1 is 30, and\nif the end date is also the last day of February d_2 is also 30.\n\nReference\n\nMicrosoft Excel YEARFRAC function\nDavid A. Wheeler (2008) \"YEARFRAC Incompatibilities between Excel 2007 and OOXML (OXML), and the Definitions Actually Used by Excel 2007\"\n\n\n\n\n\n"
+},
+
+{
     "location": "#daycount_types-1",
     "page": "DayCounts.jl",
     "title": "DayCount types",
     "category": "section",
-    "text": "DayCounts.Actual365Fixed\nDayCounts.Actual360\nDayCounts.ActualActualISDA\nDayCounts.ActualActualICMA\nDayCounts.Thirty360\nDayCounts.ThirtyE360\nDayCounts.ThirtyE360ISDA"
+    "text": "DayCounts.Actual365Fixed\nDayCounts.Actual360\nDayCounts.ActualActualISDA\nDayCounts.ActualActualICMA\nDayCounts.Thirty360\nDayCounts.ThirtyE360\nDayCounts.ThirtyE360ISDA\nDayCounts.Thirty360Excel"
 },
 
 ]}
