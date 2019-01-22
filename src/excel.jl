@@ -1,7 +1,7 @@
 """
     Thirty360Excel()
 
-**30/360* day count convention, as computed via Microsoft Excel `YEARFRAC` with the basis option of `0`.
+**US (NASD) 30/360** day count convention, as computed via Microsoft Excel `YEARFRAC` with the basis option of `0`.
 
 This differs from [`Thirty360`](@ref) when:
 *  if the start date is the last day of February, then
@@ -42,7 +42,7 @@ end
 """
     ActualActualExcel()
 
-**Actual/Actual* day count convention, as computed via Microsoft Excel `YEARFRAC` with the basis option of `1`.
+**Actual/Actual** day count convention, as computed via Microsoft Excel `YEARFRAC` with the basis option of `1`.
 
 The year fraction is
 ```math
@@ -50,10 +50,10 @@ The year fraction is
 ```
 where:
 * if start date and end date are in the same calendar year, then ``D`` is the number of days in that calendar year,
-* otherwise if the end date is less than one year after the start date, then
+* otherwise if the end date is less than or equal to one year after the start date, then
   - ``D = 366`` if the interval includes February 29 (including both the start and end dates), or
   - ``D = 365`` otherwise.
-* otherwise it is the simple average length of the years included in the interval (this does not depend on where the start or end dates fall within those years).
+* otherwise it is the average length of the years included in the interval (this does not depend on where the start or end dates fall within those years).
 
 # Reference
 - [Microsoft Excel `YEARFRAC` function](https://support.office.com/en-us/article/yearfrac-function-3844141e-c76d-4143-82b6-208454ddc6a8)
