@@ -14,6 +14,16 @@ using Test
     @test yearfrac(Date(2012, 2,28), Date(2012, 3,28), dc) == 29 / 365
     @test yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc) == 28 / 365
     @test yearfrac(Date(2012, 3, 1), Date(2012, 3,28), dc) == 27 / 365
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
 
 @testset "Actual360" begin
@@ -27,6 +37,16 @@ end
     @test yearfrac(Date(2012, 2,28), Date(2012, 3,28), dc) == 29 / 360
     @test yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc) == 28 / 360
     @test yearfrac(Date(2012, 3, 1), Date(2012, 3,28), dc) == 27 / 360
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
 
 @testset "ActualActualISDA" begin
@@ -40,6 +60,16 @@ end
     @test yearfrac(Date(2012, 2,28), Date(2012, 3,28), dc) == 29 / 366
     @test yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc) == 28 / 366
     @test yearfrac(Date(2012, 3, 1), Date(2012, 3,28), dc) == 27 / 366
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
 
 @testset "Thirty360" begin
@@ -64,6 +94,16 @@ end
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
 
 @testset "ThirtyE360" begin
@@ -88,6 +128,16 @@ end
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
     @test yearfrac(Date(2012, 5,31), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
 
 @testset "ThirtyE360ISDA" begin
@@ -112,6 +162,16 @@ end
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+
+        # zeros
+        @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+        @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+        @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+        @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+        # reflection
+        @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+        @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
     end
 
     @testset "maturity end of Feb" begin
@@ -135,16 +195,39 @@ end
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,29), dc) == ((29-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,30), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
         @test yearfrac(Date(2012, 5,31), Date(2013, 8,31), dc) == ((30-30) + (8-5)*30 + (2013-2012)*360)/360 # exception
+
+        # zeros
+        @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+        @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+        @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+        @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+        # reflection
+        @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+        @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
     end
 end
 
+@testset "ActualActualICMA" begin
+    dc = DayCounts.ActualActualICMA(Date(2011,7,1):Month(6):Date(2012,7,1))
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
+end
 
 @testset "ActuaActual ISDA Memo" begin
     # these test cases are all derived from
     # EMU and Market Conventions: Recent Developments, ISDA - BS:9951.1
     # §4. The Actual/Actual Day Count Convention
     # https://www.isda.org/a/AIJEE/1998-ISDA-memo-EMU-and-Market-Conventions-Recent-Developments.pdf
-    
+
     @testset "short first" begin
         dc_isda = DayCounts.ActualActualISDA()
         dc_icma = DayCounts.ActualActualICMA(Date(1998,7,1):Month(12):Date(2000,7,1))
@@ -175,7 +258,7 @@ end
     end
 
     @testset "short final" begin
-        dc_isda = DayCounts.ActualActualISDA()        
+        dc_isda = DayCounts.ActualActualISDA()
         dc_icma = DayCounts.ActualActualICMA(Date(1999,7,30):Month(6):Date(2000,7,30))
 
         @test yearfrac(Date(1999,7,30), Date(2000,1,30), dc_isda) ≈ 0.50389 atol=0.000005
@@ -187,7 +270,7 @@ end
         @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_isda) ≈ 0.50389 + 0.41530 atol=0.000005
         @test yearfrac(Date(1999,7,30), Date(2000,6,30), dc_icma) ≈ 0.5     + 0.41758 atol=0.000005
     end
-        
+
     @testset "long final" begin
         dc_isda = DayCounts.ActualActualISDA()
         # TODO: need a way to express "last day of month" schedules.
