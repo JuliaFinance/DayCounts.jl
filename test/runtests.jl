@@ -322,3 +322,43 @@ end
     @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
     @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
 end
+
+
+
+@testset "ActualActualExcel" begin
+    dc = DayCounts.ActualActualExcel()
+    # calculated from Excel sheet
+    @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == 62/365
+    @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == 63/366
+    @test yearfrac(Date(2011,12,28), Date(2012, 3, 1), dc) == 64/366
+    @test yearfrac(Date(2011,12,28), Date(2016, 2,28), dc) == 1523/365.3333333333333
+    @test yearfrac(Date(2011,12,28), Date(2016, 2,29), dc) == 1524/365.3333333333333
+    @test yearfrac(Date(2011,12,28), Date(2016, 3, 1), dc) == 1525/365.3333333333333
+    @test yearfrac(Date(2012, 2,28), Date(2012, 3,28), dc) == 29/366
+    @test yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc) == 28/366
+    @test yearfrac(Date(2012, 3, 1), Date(2012, 3,28), dc) == 27/366
+
+    @test yearfrac(Date(2012, 2,28), Date(2013, 2,28), dc) == 366/366
+    @test yearfrac(Date(2012, 2,29), Date(2013, 2,28), dc) == 365/366
+    @test yearfrac(Date(2012, 3, 1), Date(2013, 2,28), dc) == 364/365
+    @test yearfrac(Date(2012, 2,28), Date(2013, 3, 1), dc) == 367/365.5
+    @test yearfrac(Date(2012, 2,29), Date(2013, 3, 1), dc) == 366/365.5
+    @test yearfrac(Date(2012, 3, 1), Date(2013, 3, 1), dc) == 365/365
+    
+    @test yearfrac(Date(2011, 2,28), Date(2012, 2,28), dc) == 365/365
+    @test yearfrac(Date(2011, 3, 1), Date(2012, 2,28), dc) == 364/365
+    @test yearfrac(Date(2011, 2,28), Date(2012, 2,29), dc) == 366/365.5
+    @test yearfrac(Date(2011, 3, 1), Date(2012, 2,29), dc) == 365/366
+    @test yearfrac(Date(2011, 2,28), Date(2012, 3, 1), dc) == 367/365.5
+    @test yearfrac(Date(2011, 3, 1), Date(2012, 3, 1), dc) == 366/366
+
+    # zeros
+    @test yearfrac(Date(2011,12,28), Date(2011,12,28), dc) == 0
+    @test yearfrac(Date(2011,12,31), Date(2011,12,31), dc) == 0
+    @test yearfrac(Date(2012, 2,28), Date(2012, 2,28), dc) == 0
+    @test yearfrac(Date(2012, 2,29), Date(2012, 2,29), dc) == 0
+
+    # reflection
+    @test yearfrac(Date(2012, 2,28), Date(2011,12,28), dc) == -yearfrac(Date(2011,12,28), Date(2012, 2,28), dc)
+    @test yearfrac(Date(2012, 3,28), Date(2012, 2,29), dc) == -yearfrac(Date(2012, 2,29), Date(2012, 3,28), dc)
+end
