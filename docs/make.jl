@@ -2,6 +2,10 @@ using Documenter
 using DayCounts
 
 makedocs(
+    pages = [
+        "index.md",
+        "api.md",
+        ],
     sitename = "DayCounts",
     format = Documenter.HTML(),
     modules = [DayCounts]
