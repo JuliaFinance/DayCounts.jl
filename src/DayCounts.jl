@@ -3,7 +3,7 @@ module DayCounts
 # https://business.nasdaq.com/media/day-count-fractions_tcm5044-53854.pdf
 # https://www.isda.org/2008/12/22/30-360-day-count-conventions/
 
-using Dates, Statistics
+using Dates
 export yearfrac
 
 """

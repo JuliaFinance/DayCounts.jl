@@ -1,11 +1,10 @@
 name = "DayCounts"
 uuid = "a3b753a0-4d35-5af2-8aa8-b76780449c56"
-authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>"]
+authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>", "Simon Byrne <simonbyrne@gmail.com>"]
 version = "0.0.1"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
-Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [extras]
 ExcelFiles = "89b67f3b-d1aa-5f6f-9ca4-282e8d98620d"

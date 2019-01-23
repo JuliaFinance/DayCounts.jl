@@ -77,6 +77,7 @@ function yearfrac(startdate::Date, enddate::Date, dc::ActualActualExcel)
             return Dates.value(enddate-startdate) / 365
         end
     else
-        return Dates.value(enddate-startdate) / mean(daysinyear, y1:y2)
+        yrange = y1:y2
+        return Dates.value(enddate-startdate) / (sum(daysinyear, yrange) / length(yrange))
     end
 end
