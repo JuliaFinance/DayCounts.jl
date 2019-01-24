@@ -289,8 +289,8 @@ end
 end
 
 
-@testset "Excel.Thirty360" begin
-    dc = DayCounts.Excel.Thirty360()
+@testset "ThirtyU360" begin
+    dc = DayCounts.ThirtyU360()
     # usual rule: ((d2-d1) + (m2-m1)*30 + (y2-y1)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360

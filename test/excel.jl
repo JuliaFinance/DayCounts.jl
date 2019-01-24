@@ -34,7 +34,7 @@ end
 
 @testset "Excel basis 4" begin
     table = load("yearfrac.xlsx","basis4")
-    dc = DayCounts.ThirtyE360()
+    dc = DayCounts.Excel.ThirtyE360()
     for r in ExcelFiles.getiterator(table)
         @test yearfrac(Date(r.startdate), Date(r.enddate), dc) == r.yearfrac
     end
