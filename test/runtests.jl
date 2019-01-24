@@ -289,8 +289,8 @@ end
 end
 
 
-@testset "Thirty360Excel" begin
-    dc = DayCounts.Thirty360Excel()
+@testset "Excel.Thirty360" begin
+    dc = DayCounts.Excel.Thirty360()
     # usual rule: ((d2-d1) + (m2-m1)*30 + (y2-y1)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == ((28-28) + (2-12)*30 + (2012-2011)*360)/360
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == ((29-28) + (2-12)*30 + (2012-2011)*360)/360
@@ -325,8 +325,8 @@ end
 
 
 
-@testset "ActualActualExcel" begin
-    dc = DayCounts.ActualActualExcel()
+@testset "Excel.ActualActual" begin
+    dc = DayCounts.Excel.ActualActual()
     # calculated from Excel sheet
     @test yearfrac(Date(2011,12,28), Date(2012, 2,28), dc) == 62/365
     @test yearfrac(Date(2011,12,28), Date(2012, 2,29), dc) == 63/366
