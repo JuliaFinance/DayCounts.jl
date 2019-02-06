@@ -4,7 +4,7 @@ module DayCounts
 # https://www.isda.org/2008/12/22/30-360-day-count-conventions/
 
 using Dates
-export yearfrac
+export yearfrac, Excel
 
 """
     yearfrac(startdate::Date, enddate::Date, dc::DayCount)
@@ -22,7 +22,7 @@ end
 abstract type DayCount end
 
 """
-    Actual365Fixed()
+    Actual365Fixed() or Excel.Actual365
 
 **Actual/365 (Fixed)** day count convention.
 
@@ -195,7 +195,7 @@ function yearfrac(startdate::Date, enddate::Date, dc::Thirty360)
 end
 
 """
-    ThirtyU360()
+    ThirtyU360() or Excel.Thirty360
 
 **US (NASD) 30/360** day count convention, as computed via Microsoft Excel `YEARFRAC` with the basis option of `0`.
 
