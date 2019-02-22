@@ -36,7 +36,7 @@ The year fraction is computed as:
 """
 struct Actual365Fixed <: DayCount end
 const Actual365F = Actual365Fixed
-function yearfrac(startdate::Date, enddate::Date, ::Actual365Fixed)
+function yearfrac(startdate::Date, enddate::Date, dc::Actual365Fixed)
     return Dates.value(enddate-startdate)/365
 end
 
@@ -55,7 +55,7 @@ The year fraction is computed as:
 
 """
 struct Actual360 <: DayCount end
-function yearfrac(startdate::Date, enddate::Date, ::Actual360)
+function yearfrac(startdate::Date, enddate::Date, dc::Actual360)
     return Dates.value(enddate-startdate)/360
 end
 
