@@ -1,7 +1,7 @@
 name = "DayCounts"
 uuid = "44e31299-2c53-5a9b-9141-82aa45d7972f"
 authors = ["Eric Forgy <Eric.Forgy@coherentasia.com>", "Simon Byrne <simon@juliacomputing.com>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
