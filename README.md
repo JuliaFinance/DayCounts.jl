@@ -1,6 +1,8 @@
 # DayCounts.jl
 
-[![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][documenter-dev-img]][documenter-dev-url]
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaFinance.github.io/DayCounts.jl/stable/) 
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaFinance.github.io/DayCounts.jl/dev/)
+![CI](https://github.com/JuliaFinance/DayCounts.jl/workflows/CI/badge.svg)
 
 ## Summary
 
