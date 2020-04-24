@@ -11,33 +11,41 @@ In this package, we collect various day count conventions and provide a method `
 ## Example
 
 ```julia
-julia> using DayCounts, Dates
+using DayCounts, Dates
+import DayCounts: Thirty360, Actual360,Actual365Fixed,ActualActualISDA,ActualActualExcel, yearfrac
 
-julia> basis = [Thirty360, Actual360, Actual365, ActualActual];
+basis = [Thirty360(), Actual360(), Actual365Fixed(), ActualActualISDA(),ActualActualExcel()];
 
-julia> println("\nYear fraction between Jan 1 and April 1:\n")
-       for y in 2019:2020
-       println(y,isleapyear(y) ? " (Leap Year)" : " (No Leap Year)")
-       for b in basis
+println("Year fraction between Jan 1 and April 1:\n")
+
+for y in 2019:2020
+    println("\n",y,isleapyear(y) ? " (Leap Year)" : " (No Leap Year)")
+    
+    for b in basis
        yf = yearfrac(Date(y,1,1),Date(y,4,1),b)
        println(b,": ",yf)
-       end
-       println("")
-       end
+    end
+end
+```
 
+The above code prints the following:
+
+```
 Year fraction between Jan 1 and April 1:
 
 2019 (No Leap Year)
-Thirty360: 0.25
-Actual360: 0.25
-Actual365: 0.2465753424657534
-ActualActual: 0.2465753424657534
+Thirty360(): 0.25
+Actual360(): 0.25
+Actual365Fixed(): 0.2465753424657534
+ActualActualISDA(): 0.2465753424657534
+ActualActualExcel(): 0.2465753424657534
 
 2020 (Leap Year)
-Thirty360: 0.25
-Actual360: 0.25277777777777777
-Actual365: 0.2493150684931507
-ActualActual: 0.24863387978142076
+Thirty360(): 0.25
+Actual360(): 0.25277777777777777
+Actual365Fixed(): 0.2493150684931507
+ActualActualISDA(): 0.24863387978142076
+ActualActualExcel(): 0.24863387978142076
 ```
 
 ## References
