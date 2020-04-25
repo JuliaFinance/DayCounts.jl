@@ -57,12 +57,3 @@ We used the following sources:
 * <https://en.wikipedia.org/wiki/Day_count_convention>
 * <https://business.nasdaq.com/media/day-count-fractions_tcm5044-53854.pdf>
 * <https://www.isda.org/2008/12/22/30-360-day-count-conventions>
-
-[travis-img]: https://travis-ci.org/JuliaFinance/DayCounts.jl.svg?branch=master
-[travis-url]: https://travis-ci.org/JuliaFinance/DayCounts.jl
-
-[appveyor-img]: https://ci.appveyor.com/api/projects/status/2rlf3g68ocvmc71q/branch/master?svg=true
-[appveyor-url]: https://ci.appveyor.com/project/EricForgy/daycounts-jl
-
-[documenter-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
-[documenter-dev-url]: https://juliafinance.github.io/DayCounts.jl/dev/
